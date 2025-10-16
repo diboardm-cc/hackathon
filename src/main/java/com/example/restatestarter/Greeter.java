@@ -26,28 +26,29 @@ public class Greeter {
     public GreetingResponse greet(Context ctx, Greeting req) {
         System.out.println("prints every invocation");
 
-        // Durably execute a set of steps; resilient against failures
-        String greetingId = ctx.random().nextUUID().toString();
-        ctx.run("Notification", () -> {
-            System.out.println("running step 1: " + req.name);
+        ctx.run(() -> {
+            var stepName = "";
+            System.out.println("step 1: " + stepName);
         });
 
         ctx.sleep(Duration.ofSeconds(10));
-
-        ctx.run("Reminder", () -> {
-            System.out.println("running step 2:" + req.name);
+        String accountNumber = ctx.run(String.class, () -> {
+            var stepName = "";
+            System.out.println("step 2:" + stepName);
+            return "123456789";
         });
 
-        ctx.sleep(Duration.ofSeconds(5));
-
-        ctx.run("Reminder", () -> {
-            System.out.println("running step 3:" + req.name);
+        ctx.sleep(Duration.ofSeconds(10));
+        ctx.run(() -> {
+            var stepName = "";
+            System.out.println("step 3:" + stepName);
+            sendNotification(accountNumber, req.name);
         });
 
-        ctx.sleep(Duration.ofSeconds(5));
-
-        ctx.run("Reminder", () -> {
-            System.out.println("running step 4:" + req.name);
+        ctx.sleep(Duration.ofSeconds(10));
+        ctx.run(() -> {
+            var stepName = "";
+            System.out.println("step 4:" + stepName);
         });
 
         // Respond to caller
