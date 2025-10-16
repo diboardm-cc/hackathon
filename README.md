@@ -1,16 +1,45 @@
-# Hello world - Spring Boot example
+Quickstart: Restate + Kafka Example
 
-Sample project configuration of a Restate service using the Java SDK and Spring Boot. 
-
-Have a look at the [Java Quickstart guide](https://docs.restate.dev/get_started/quickstart?sdk=java) for more information on how to use this project.
-
-## Starting the service
-
-To start the service, simply run:
+1. install restate server and cli
 
 ```shell
-$ mvn compile spring-boot:run
+brew install restatedev/tap/restate-server restatedev/tap/restate
 ```
 
-Restate SDK uses annotation processing to generate client classes.
-When modifying the annotated services in Intellij, it is suggested to run **CTRL + F9** to re-generate the client classes.# hackathon
+2. Start Restate and Kafka
+
+```shell
+cd ./restate
+restate-server --config-file restate.toml
+docker compose up
+````
+
+3. Let the Restate Server know about the Greeter service by registering it:
+
+```shell
+restate deployments register localhost:9080
+```
+
+4. Execute the following curl command to create a subscription, and invoke the handler for each event:
+
+```shell
+curl localhost:9070/subscriptions --json '{
+"source": "kafka://my-cluster/greetings",
+"sink": "service://Greeter/greet",
+"options": {"auto.offset.reset": "earliest"}
+}'
+```
+
+5. Publish an Event to Kafka
+
+```shell
+docker exec -it broker kafka-console-producer --bootstrap-server broker:29092 --topic greetings
+```
+
+Type a message and press enter (the greeter takes a String name as input):
+
+```json 
+{
+  "name": "Sarah"
+}
+```
