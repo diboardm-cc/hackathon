@@ -1,4 +1,5 @@
-Quickstart: Restate + Kafka Example
+# Quickstart: Restate + Kafka Example
+following information is adapted from the [ReState documentation](https://docs.restate.dev/docs/getting-started/quickstart-kafka)
 
 1. install restate server and cli
 
